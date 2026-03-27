@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Class Notes</title>
+
+  <!-- ── Load credentials from config.js ── -->
+  <script src="config.js"></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,9 +31,7 @@
       color: var(--text);
       font-family: 'Segoe UI', system-ui, sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
       padding: 2rem 1rem 6rem;
     }
 
@@ -49,7 +51,6 @@
       padding: .2rem .55rem; border-radius: 99px;
       background: var(--accent); color: #fff;
     }
-    .header-right { display: flex; align-items: center; gap: .6rem; }
 
     #adminBtn {
       background: transparent; border: 1px solid var(--border);
@@ -69,7 +70,6 @@
       gap: 1rem;
     }
 
-    /* ── Empty state ─────────────────────────────── */
     #emptyState {
       width: 100%; max-width: 860px;
       display: flex; flex-direction: column; align-items: center;
@@ -78,7 +78,6 @@
     #emptyState svg { opacity: .3; }
     #emptyState p   { font-size: .95rem; }
 
-    /* ── Loading ─────────────────────────────────── */
     #loadingState {
       width: 100%; max-width: 860px; text-align: center;
       padding: 3rem; color: var(--muted); font-style: italic;
@@ -86,49 +85,32 @@
 
     /* ── Note card ───────────────────────────────── */
     .note-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      display: flex; flex-direction: column;
-      overflow: hidden;
-      transition: border-color .2s;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); display: flex; flex-direction: column;
+      overflow: hidden; transition: border-color .2s;
     }
     .note-card:hover { border-color: #3d4260; }
 
     .note-card-header {
       display: flex; align-items: flex-start; justify-content: space-between;
-      padding: 1rem 1.1rem .7rem;
-      border-bottom: 1px solid var(--border);
-      gap: .6rem;
+      padding: 1rem 1.1rem .7rem; border-bottom: 1px solid var(--border); gap: .6rem;
     }
-    .note-card-title {
-      font-size: .97rem; font-weight: 700; line-height: 1.3;
-      word-break: break-word;
-    }
-    .note-card-date {
-      font-size: .72rem; color: var(--muted);
-      white-space: nowrap; margin-top: .15rem; flex-shrink: 0;
-    }
+    .note-card-title { font-size: .97rem; font-weight: 700; line-height: 1.3; word-break: break-word; }
+    .note-card-date  { font-size: .72rem; color: var(--muted); white-space: nowrap; margin-top: .15rem; flex-shrink: 0; }
 
     .note-card-body {
-      padding: .9rem 1.1rem;
-      font-size: .9rem; line-height: 1.75;
-      white-space: pre-wrap; word-break: break-word;
-      flex: 1;
-      max-height: 280px;
-      overflow-y: auto;
+      padding: .9rem 1.1rem; font-size: .9rem; line-height: 1.75;
+      white-space: pre-wrap; word-break: break-word; flex: 1;
+      max-height: 280px; overflow-y: auto;
     }
-    /* thin scrollbar */
     .note-card-body::-webkit-scrollbar { width: 4px; }
     .note-card-body::-webkit-scrollbar-track { background: transparent; }
     .note-card-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     .note-card-footer {
       display: flex; align-items: center; justify-content: space-between;
-      padding: .65rem 1.1rem;
-      border-top: 1px solid var(--border);
-      background: var(--surface2);
-      gap: .5rem;
+      padding: .65rem 1.1rem; border-top: 1px solid var(--border);
+      background: var(--surface2); gap: .5rem;
     }
 
     /* ── Buttons ─────────────────────────────────── */
@@ -144,33 +126,30 @@
     .btn-copy.copied { background: var(--green); }
 
     .admin-actions { display: flex; gap: .4rem; }
-
     .btn-icon {
-      width: 30px; height: 30px;
-      border-radius: 7px; border: 1px solid var(--border);
+      width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--border);
       background: transparent; color: var(--muted); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background .15s, color .15s, border-color .15s;
     }
-    .btn-icon:hover { background: var(--surface); color: var(--text); border-color: #4a5080; }
+    .btn-icon:hover     { background: var(--surface); color: var(--text); border-color: #4a5080; }
     .btn-icon.del:hover { background: rgba(239,68,68,.12); color: var(--red); border-color: var(--red); }
 
-    /* ── Floating "+" button ─────────────────────── */
+    /* ── Floating + button ───────────────────────── */
     #addBtn {
       position: fixed; bottom: 2.2rem; right: 2.2rem;
       width: 54px; height: 54px; border-radius: 50%;
       background: var(--accent); color: #fff; border: none;
-      font-size: 1.6rem; font-weight: 300; cursor: pointer;
+      font-size: 1.6rem; cursor: pointer;
       display: none; align-items: center; justify-content: center;
       box-shadow: 0 4px 20px rgba(108,99,255,.45);
-      transition: transform .15s, box-shadow .15s;
-      z-index: 50;
+      transition: transform .15s, box-shadow .15s; z-index: 50;
     }
     #addBtn.visible { display: flex; }
-    #addBtn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(108,99,255,.6); }
+    #addBtn:hover  { transform: scale(1.08); box-shadow: 0 6px 28px rgba(108,99,255,.6); }
     #addBtn:active { transform: scale(.96); }
 
-    /* ── Settings panel (admin) ──────────────────── */
+    /* ── Admin settings panel ────────────────────── */
     #settingsPanel {
       display: none; flex-direction: column; gap: 1.2rem;
       width: 100%; max-width: 860px; margin-top: 1.5rem;
@@ -179,56 +158,48 @@
     }
     #settingsPanel.visible { display: flex; }
 
-    .tab-bar { display: flex; gap: .5rem; border-bottom: 1px solid var(--border); padding-bottom: .8rem; }
-    .tab {
-      padding: .35rem .9rem; border-radius: 6px; font-size: .82rem;
-      font-weight: 600; cursor: pointer; border: 1px solid transparent;
-      color: var(--muted); background: transparent; transition: all .15s;
+    .section-title { font-size: .95rem; font-weight: 700; color: var(--accent2); }
+
+    /* config status card */
+    .config-status {
+      display: flex; align-items: flex-start; gap: .8rem;
+      padding: .9rem 1rem; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--surface2); font-size: .83rem; line-height: 1.6;
     }
-    .tab.active { border-color: var(--accent); color: var(--accent2); background: rgba(108,99,255,.08); }
+    .config-status .icon { font-size: 1.15rem; flex-shrink: 0; }
+    .config-status .label { color: var(--muted); }
+    .config-status .label strong { color: var(--text); display: block; margin-bottom: .1rem; }
+    .config-status code {
+      background: rgba(255,255,255,.06); padding: .1rem .35rem;
+      border-radius: 4px; font-size: .8rem; color: var(--accent2);
+    }
 
-    .tab-pane { display: none; flex-direction: column; gap: 1rem; }
-    .tab-pane.visible { display: flex; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: .2rem 0; }
 
+    /* form elements */
     .field { display: flex; flex-direction: column; gap: .4rem; }
     .field label { font-size: .8rem; color: var(--muted); }
-
-    input[type="text"], input[type="password"], textarea {
+    input[type="text"], input[type="password"] {
       background: var(--bg); color: var(--text);
       border: 1px solid var(--border); border-radius: 8px;
       padding: .55rem .9rem; font-size: .9rem; font-family: inherit;
       outline: none; transition: border-color .2s; width: 100%;
     }
-    input:focus, textarea:focus { border-color: var(--accent); }
-    textarea { resize: vertical; line-height: 1.7; }
-
+    input:focus { border-color: var(--accent); }
     .row { display: flex; gap: .6rem; flex-wrap: wrap; }
 
     .btn {
       padding: .5rem 1.2rem; border-radius: 8px; font-size: .85rem;
       font-weight: 600; cursor: pointer; border: none; transition: opacity .2s;
     }
-    .btn:hover  { opacity: .85; }
+    .btn:hover   { opacity: .85; }
     .btn-primary { background: var(--accent); color: #fff; }
     .btn-danger  { background: var(--red);    color: #fff; }
     .btn-ghost   { background: transparent; color: var(--muted); border: 1px solid var(--border); }
 
-    .info-box {
-      background: rgba(108,99,255,.08); border: 1px solid rgba(108,99,255,.3);
-      border-radius: 8px; padding: 1rem 1.1rem;
-      font-size: .82rem; line-height: 1.7; color: var(--muted);
-    }
-    .info-box strong { color: var(--accent2); }
-    .info-box a { color: var(--accent2); }
-    .info-box ol { padding-left: 1.2rem; }
-    .info-box li { margin: .2rem 0; }
-
-    .status-dot {
-      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-      margin-right: .4rem; background: var(--muted);
-    }
-    .status-dot.ok  { background: var(--green); }
-    .status-dot.err { background: var(--red); }
+    .hint { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+    .hint a { color: var(--accent2); }
+    .hint code { background: rgba(255,255,255,.06); padding: .1rem .35rem; border-radius: 4px; }
 
     /* ── Toast ───────────────────────────────────── */
     #toast {
@@ -241,12 +212,11 @@
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── Overlay modals ──────────────────────────── */
+    /* ── Modals ──────────────────────────────────── */
     .overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,.65); backdrop-filter: blur(4px);
-      z-index: 200; align-items: center; justify-content: center;
-      padding: 1rem;
+      z-index: 200; align-items: center; justify-content: center; padding: 1rem;
     }
     .overlay.open { display: flex; }
 
@@ -256,10 +226,16 @@
       display: flex; flex-direction: column; gap: 1rem;
     }
     .modal h2 { font-size: 1.05rem; font-weight: 700; }
-    .modal-actions { display: flex; gap: .6rem; justify-content: flex-end; }
-    .modal-error {
-      font-size: .8rem; color: var(--red); display: none; margin-top: -.4rem;
+    textarea {
+      background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: .55rem .9rem; font-size: .9rem; font-family: inherit;
+      outline: none; transition: border-color .2s; width: 100%;
+      resize: vertical; line-height: 1.7;
     }
+    textarea:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: .6rem; justify-content: flex-end; }
+    .modal-error   { font-size: .8rem; color: var(--red); display: none; }
     .modal-error.show { display: block; }
 
     footer {
@@ -281,87 +257,73 @@
     Class<span>Notes</span>
     <span class="badge">LIVE</span>
   </div>
-  <div class="header-right">
-    <button id="adminBtn" onclick="openLoginModal()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <rect x="3" y="11" width="18" height="11" rx="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
-      <span id="adminBtnLabel">Admin</span>
-    </button>
-  </div>
+  <button id="adminBtn" onclick="openLoginModal()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    <span id="adminBtnLabel">Admin</span>
+  </button>
 </header>
 
-<!-- ── Notes grid ──────────────────────────────────── -->
+<!-- ── Notes ──────────────────────────────────────── -->
 <div id="loadingState">Loading notes…</div>
 <div id="emptyState" style="display:none">
   <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
     <polyline points="14 2 14 8 20 8"/>
   </svg>
-  <p>No notes yet. The teacher will post notes here soon.</p>
+  <p id="emptyMsg">No notes yet. The teacher will post notes here soon.</p>
 </div>
 <div id="notesGrid"></div>
 
-<!-- ── Settings panel (admin only) ────────────────── -->
+<!-- ── Admin settings panel ───────────────────────── -->
 <div id="settingsPanel">
-  <div style="font-size:.95rem;font-weight:700;color:var(--accent2)">Admin Settings</div>
+  <div class="section-title">Admin Settings</div>
 
-  <div class="tab-bar">
-    <button class="tab active" onclick="switchTab('setup')">JSONBin Setup</button>
-    <button class="tab"        onclick="switchTab('security')">Security</button>
-  </div>
+  <!-- Config file status -->
+  <div id="configStatusCard" class="config-status"></div>
 
-  <!-- TAB: Setup -->
-  <div class="tab-pane visible" id="tab-setup">
-    <div class="info-box">
-      <strong>One-time setup (~2 min)</strong><br><br>
-      <ol>
-        <li>Go to <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> and create a free account.</li>
-        <li><strong>API Keys</strong> → copy your <strong>Master Key</strong>.</li>
-        <li><strong>Bins → Create Bin</strong> → paste <code>{"notes":[]}</code> → tick <strong>Make Public</strong> → save → copy the <strong>Bin ID</strong>.</li>
-        <li>Enter both below and click <strong>Connect</strong>.</li>
-      </ol>
-    </div>
-    <div style="font-size:.82rem">
-      <span class="status-dot" id="statusDot"></span>
-      <span id="statusText">Not connected</span>
-    </div>
+  <hr class="divider" />
+
+  <!-- Master key override (shown only when config.js has no master key) -->
+  <div id="masterKeySection" style="display:none">
     <div class="field">
-      <label>Bin ID</label>
-      <input type="text" id="binIdInput" placeholder="e.g. 64f3a8c712a1b2…" />
-    </div>
-    <div class="field">
-      <label>Master Key (stays in your browser only)</label>
+      <label>Master Key <span style="color:var(--muted);font-weight:400">(not found in config.js — enter here)</span></label>
       <input type="password" id="masterKeyInput" placeholder="$2b$10$…" />
     </div>
-    <div class="row">
-      <button class="btn btn-primary" onclick="connectJsonbin()">Connect</button>
-      <button class="btn btn-danger"  onclick="disconnectJsonbin()">Disconnect</button>
+    <div class="row" style="margin-top:.2rem">
+      <button class="btn btn-primary" onclick="saveMasterKey()">Save Key</button>
     </div>
-    <div class="row" style="margin-top:.4rem">
-      <button class="btn btn-ghost" onclick="logOut()">Log Out</button>
-    </div>
+    <p class="hint" style="margin-top:.3rem">
+      Stored only in <em>your</em> browser. Or add it to <code>config.js</code> for permanent storage.
+      See <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → API Keys.
+    </p>
   </div>
 
-  <!-- TAB: Security -->
-  <div class="tab-pane" id="tab-security">
-    <div class="field">
-      <label>New passcode (min 4 characters)</label>
-      <input type="password" id="newPass1" placeholder="New passcode" />
-    </div>
-    <div class="field">
-      <label>Confirm passcode</label>
-      <input type="password" id="newPass2" placeholder="Repeat passcode" />
-    </div>
-    <div class="row">
-      <button class="btn btn-danger" onclick="changePasscode()">Update Passcode</button>
-      <button class="btn btn-ghost"  onclick="logOut()">Log Out</button>
+  <hr class="divider" id="passDivider" />
+
+  <!-- Change passcode -->
+  <div>
+    <div style="font-size:.85rem;font-weight:600;margin-bottom:.8rem">Change Admin Passcode</div>
+    <div style="display:flex;flex-direction:column;gap:.7rem">
+      <div class="field">
+        <label>New passcode (min 4 characters)</label>
+        <input type="password" id="newPass1" placeholder="New passcode" />
+      </div>
+      <div class="field">
+        <label>Confirm passcode</label>
+        <input type="password" id="newPass2" placeholder="Repeat passcode" />
+      </div>
+      <div class="row">
+        <button class="btn btn-danger" onclick="changePasscode()">Update Passcode</button>
+        <button class="btn btn-ghost"  onclick="logOut()">Log Out</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ── Floating Add button ─────────────────────────── -->
+<!-- ── Floating + ──────────────────────────────────── -->
 <button id="addBtn" title="Add new note" onclick="openNoteModal()">+</button>
 
 <footer>Students: read &amp; copy freely &nbsp;·&nbsp; Admin: click the lock icon to manage notes</footer>
@@ -401,7 +363,7 @@
   </div>
 </div>
 
-<!-- ── Confirm delete modal ───────────────────────── -->
+<!-- ── Delete confirm modal ───────────────────────── -->
 <div class="overlay" id="deleteOverlay" onclick="closeOverlayOutside(event,'deleteOverlay')">
   <div class="modal" style="width:360px">
     <h2>Delete this note?</h2>
@@ -414,19 +376,31 @@
 </div>
 
 <script>
-// ── Constants ──────────────────────────────────────
-const K_PASS = 'cn_pass';
-const K_BIN  = 'cn_binId';
-const K_KEY  = 'cn_masterKey';
+// ── Config resolution ──────────────────────────────
+// Reads from config.js (window.SITE_CONFIG) first, falls back to localStorage.
+const K_PASS      = 'cn_pass';
+const K_MASTERKEY = 'cn_masterKey';   // localStorage fallback for master key only
 const DEFAULT_PASS = 'teacher123';
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
 
-let isAdmin  = false;
-let notes    = [];          // array of {id, title, content, date}
-let editingId  = null;      // id of note being edited (null = new)
-let deletingId = null;      // id of note pending deletion
+function getBinId() {
+  return (window.SITE_CONFIG?.binId || '').trim();
+}
+function getMasterKey() {
+  const fromFile = (window.SITE_CONFIG?.masterKey || '').trim();
+  return fromFile || (localStorage.getItem(K_MASTERKEY) || '').trim();
+}
+function masterKeyInFile() {
+  return !!(window.SITE_CONFIG?.masterKey || '').trim();
+}
 
-// ── Helpers ────────────────────────────────────────
+// ── State ──────────────────────────────────────────
+let isAdmin    = false;
+let notes      = [];
+let editingId  = null;
+let deletingId = null;
+
+// ── SHA-256 ────────────────────────────────────────
 async function sha256(msg) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
@@ -434,17 +408,11 @@ async function sha256(msg) {
 async function getStoredHash() {
   return localStorage.getItem(K_PASS) || await sha256(DEFAULT_PASS);
 }
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
-function fmtDate(iso) {
-  return new Date(iso).toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
-}
 
+// ── Toast ──────────────────────────────────────────
 function toast(msg, color = 'var(--green)') {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderColor = color;
+  t.textContent = msg; t.style.borderColor = color;
   t.classList.add('show');
   clearTimeout(t._t);
   t._t = setTimeout(() => t.classList.remove('show'), 2600);
@@ -452,12 +420,18 @@ function toast(msg, color = 'var(--green)') {
 
 // ── JSONBin ────────────────────────────────────────
 async function fetchNotes() {
-  const binId = localStorage.getItem(K_BIN);
+  const binId = getBinId();
   document.getElementById('loadingState').style.display = 'block';
   document.getElementById('notesGrid').innerHTML = '';
   document.getElementById('emptyState').style.display = 'none';
 
-  if (!binId) { renderNotes([]); return; }
+  if (!binId) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    document.getElementById('emptyMsg').textContent =
+      'No Bin ID set. Add it to config.js.';
+    return;
+  }
 
   try {
     const res = await fetch(`${JSONBIN_BASE}/${binId}/latest`);
@@ -467,18 +441,16 @@ async function fetchNotes() {
   } catch (e) {
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('emptyState').style.display = 'flex';
-    document.getElementById('emptyState').querySelector('p').textContent =
-      'Could not load notes. Please refresh.';
+    document.getElementById('emptyMsg').textContent = 'Could not load notes. Please refresh.';
   }
 }
 
 async function pushNotes() {
-  const binId  = localStorage.getItem(K_BIN);
-  const apiKey = localStorage.getItem(K_KEY);
-  if (!binId || !apiKey) {
-    toast('JSONBin not configured. Go to Admin → Setup.', 'var(--red)');
-    return false;
-  }
+  const binId  = getBinId();
+  const apiKey = getMasterKey();
+  if (!binId)  { toast('Bin ID missing in config.js', 'var(--red)'); return false; }
+  if (!apiKey) { toast('Master Key not set. Enter it in Admin Settings.', 'var(--red)'); return false; }
+
   const res = await fetch(`${JSONBIN_BASE}/${binId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey },
@@ -499,15 +471,8 @@ function renderNotes(arr) {
   const grid  = document.getElementById('notesGrid');
   const empty = document.getElementById('emptyState');
   grid.innerHTML = '';
-
-  if (!notes.length) {
-    empty.style.display = 'flex';
-    empty.querySelector('p').textContent = 'No notes yet. The teacher will post notes here soon.';
-    return;
-  }
+  if (!notes.length) { empty.style.display = 'flex'; return; }
   empty.style.display = 'none';
-
-  // newest first
   [...notes].reverse().forEach(n => grid.appendChild(makeCard(n)));
 }
 
@@ -515,15 +480,14 @@ function makeCard(note) {
   const card = document.createElement('div');
   card.className = 'note-card';
   card.id = 'card-' + note.id;
-
   card.innerHTML = `
     <div class="note-card-header">
-      <div class="note-card-title">${escHtml(note.title)}</div>
+      <div class="note-card-title">${esc(note.title)}</div>
       <div class="note-card-date">${fmtDate(note.date)}</div>
     </div>
-    <div class="note-card-body">${escHtml(note.content)}</div>
+    <div class="note-card-body">${esc(note.content)}</div>
     <div class="note-card-footer">
-      <button class="btn-copy" data-id="${note.id}" onclick="copyCard('${note.id}',this)">
+      <button class="btn-copy" onclick="copyCard('${note.id}',this)">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <rect x="9" y="9" width="13" height="13" rx="2"/>
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -540,8 +504,7 @@ function makeCard(note) {
         <button class="btn-icon del" title="Delete" onclick="openDeleteModal('${note.id}')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
             <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
-            <path d="M10 11v6"/><path d="M14 11v6"/>
-            <path d="M9 6V4h6v2"/>
+            <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
           </svg>
         </button>
       </div>
@@ -549,10 +512,15 @@ function makeCard(note) {
   return card;
 }
 
-function escHtml(s) {
+function esc(s) {
   return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(iso) {
+  return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+}
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 }
 
 // ── Copy card ──────────────────────────────────────
@@ -566,25 +534,23 @@ function copyCard(id, btn) {
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
   });
-  btn.classList.add('copied');
-  btn.textContent = 'Copied!';
+  btn.classList.add('copied'); btn.textContent = 'Copied!';
   setTimeout(() => {
     btn.classList.remove('copied');
     btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`;
   }, 2000);
 }
 
-// ── Add / Edit modal ───────────────────────────────
+// ── Add / Edit ─────────────────────────────────────
 function openNoteModal(id = null) {
   editingId = id;
   const isEdit = id !== null;
-  document.getElementById('noteModalTitle').textContent = isEdit ? 'Edit Note' : 'Add Note';
+  document.getElementById('noteModalTitle').textContent   = isEdit ? 'Edit Note' : 'Add Note';
   document.getElementById('noteModalSaveBtn').textContent = isEdit ? 'Save Changes' : 'Publish';
-
   if (isEdit) {
-    const note = notes.find(n => n.id === id);
-    document.getElementById('modalTitleInput').value   = note.title;
-    document.getElementById('modalContentInput').value = note.content;
+    const n = notes.find(n => n.id === id);
+    document.getElementById('modalTitleInput').value   = n.title;
+    document.getElementById('modalContentInput').value = n.content;
   } else {
     document.getElementById('modalTitleInput').value   = '';
     document.getElementById('modalContentInput').value = '';
@@ -592,13 +558,12 @@ function openNoteModal(id = null) {
   openOverlay('noteOverlay');
   setTimeout(() => document.getElementById('modalTitleInput').focus(), 80);
 }
-
 function openEditModal(id) { openNoteModal(id); }
 
 async function saveNote() {
   const title   = document.getElementById('modalTitleInput').value.trim();
   const content = document.getElementById('modalContentInput').value.trim();
-  if (!title && !content) { toast('Please enter a title or content.', 'var(--yellow)'); return; }
+  if (!title && !content) { toast('Enter a title or content', 'var(--yellow)'); return; }
 
   const btn = document.getElementById('noteModalSaveBtn');
   btn.textContent = 'Saving…'; btn.disabled = true;
@@ -617,34 +582,31 @@ async function saveNote() {
   if (ok) {
     closeOverlay('noteOverlay');
     renderNotes(notes);
+    if (isAdmin) document.querySelectorAll('.admin-actions').forEach(el => el.style.display='flex');
     toast(editingId ? 'Note updated!' : 'Note published!');
   }
 }
 
-// ── Delete modal ───────────────────────────────────
-function openDeleteModal(id) {
-  deletingId = id;
-  openOverlay('deleteOverlay');
-}
+// ── Delete ─────────────────────────────────────────
+function openDeleteModal(id) { deletingId = id; openOverlay('deleteOverlay'); }
 
 async function confirmDelete() {
   if (!deletingId) return;
   const btn = document.querySelector('#deleteOverlay .btn-danger');
   btn.textContent = 'Deleting…'; btn.disabled = true;
-
   notes = notes.filter(n => n.id !== deletingId);
   const ok = await pushNotes();
-
   btn.textContent = 'Delete'; btn.disabled = false;
   if (ok) {
     closeOverlay('deleteOverlay');
     renderNotes(notes);
+    if (isAdmin) document.querySelectorAll('.admin-actions').forEach(el => el.style.display='flex');
     toast('Note deleted.', 'var(--yellow)');
     deletingId = null;
   }
 }
 
-// ── Overlay helpers ────────────────────────────────
+// ── Overlay ────────────────────────────────────────
 function openOverlay(id)  { document.getElementById(id).classList.add('open'); }
 function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
 function closeOverlayOutside(e, id) {
@@ -663,11 +625,8 @@ function openLoginModal() {
 async function checkPasscode() {
   const input = document.getElementById('passcodeInput').value;
   if (!input) return;
-  const h = await sha256(input);
-  if (h === await getStoredHash()) {
-    isAdmin = true;
-    closeOverlay('loginOverlay');
-    enterAdminMode();
+  if (await sha256(input) === await getStoredHash()) {
+    isAdmin = true; closeOverlay('loginOverlay'); enterAdminMode();
   } else {
     document.getElementById('loginError').classList.add('show');
     document.getElementById('passcodeInput').value = '';
@@ -675,19 +634,14 @@ async function checkPasscode() {
   }
 }
 
+// ── Admin mode ─────────────────────────────────────
 function enterAdminMode() {
   document.getElementById('adminBtn').classList.add('active');
   document.getElementById('adminBtnLabel').textContent = 'Log Out';
   document.getElementById('addBtn').classList.add('visible');
   document.getElementById('settingsPanel').classList.add('visible');
-
-  // show edit/delete on existing cards
   document.querySelectorAll('.admin-actions').forEach(el => el.style.display = 'flex');
-
-  // populate setup fields
-  document.getElementById('binIdInput').value     = localStorage.getItem(K_BIN)  || '';
-  document.getElementById('masterKeyInput').value = localStorage.getItem(K_KEY)  || '';
-  updateConnectionStatus();
+  renderConfigStatus();
   toast('Admin mode active');
 }
 
@@ -701,68 +655,76 @@ function logOut() {
   toast('Logged out');
 }
 
-// ── Settings tabs ──────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('#settingsPanel .tab').forEach((t, i) => {
-    t.classList.toggle('active', ['setup','security'][i] === name);
-  });
-  document.querySelectorAll('#settingsPanel .tab-pane').forEach(p => p.classList.remove('visible'));
-  document.getElementById('tab-' + name).classList.add('visible');
-}
+// ── Config status card ─────────────────────────────
+function renderConfigStatus() {
+  const binId  = getBinId();
+  const hasMKFile = masterKeyInFile();
+  const hasMKLS   = !!(localStorage.getItem(K_MASTERKEY) || '').trim();
 
-// ── JSONBin connect ────────────────────────────────
-async function connectJsonbin() {
-  const binId  = document.getElementById('binIdInput').value.trim();
-  const apiKey = document.getElementById('masterKeyInput').value.trim();
-  if (!binId || !apiKey) { toast('Enter both Bin ID and Master Key', 'var(--red)'); return; }
+  let rows = [];
 
-  const btn = document.querySelector('#tab-setup .btn-primary');
-  btn.textContent = 'Testing…'; btn.disabled = true;
-  try {
-    const res = await fetch(`${JSONBIN_BASE}/${binId}/latest`, {
-      headers: { 'X-Master-Key': apiKey }
-    });
-    if (!res.ok) throw new Error('API error ' + res.status);
-    localStorage.setItem(K_BIN, binId);
-    localStorage.setItem(K_KEY, apiKey);
-    updateConnectionStatus(true);
-    toast('Connected!');
-    await fetchNotes();
-    // re-show admin actions on freshly rendered cards
-    if (isAdmin) document.querySelectorAll('.admin-actions').forEach(el => el.style.display = 'flex');
-  } catch (e) {
-    toast('Connection failed: ' + e.message, 'var(--red)');
-    updateConnectionStatus(false);
+  // Bin ID
+  if (binId) {
+    rows.push(`<div class="config-status">
+      <span class="icon">✅</span>
+      <div class="label"><strong>Bin ID</strong>Loaded from <code>config.js</code> → <code>${binId.slice(0,8)}…</code></div>
+    </div>`);
+  } else {
+    rows.push(`<div class="config-status" style="border-color:var(--red)">
+      <span class="icon">❌</span>
+      <div class="label"><strong>Bin ID missing</strong>Open <code>config.js</code> and fill in <code>binId</code>.</div>
+    </div>`);
   }
-  btn.textContent = 'Connect'; btn.disabled = false;
-}
 
-function disconnectJsonbin() {
-  localStorage.removeItem(K_BIN); localStorage.removeItem(K_KEY);
-  document.getElementById('binIdInput').value     = '';
-  document.getElementById('masterKeyInput').value = '';
-  updateConnectionStatus(false);
-  toast('Disconnected', 'var(--yellow)');
-}
-
-function updateConnectionStatus(state) {
-  const dot  = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  if (state === true)         { dot.className = 'status-dot ok';  text.textContent = 'Connected'; }
-  else if (state === false)   { dot.className = 'status-dot err'; text.textContent = 'Not connected'; }
-  else {
-    const has = !!(localStorage.getItem(K_BIN) && localStorage.getItem(K_KEY));
-    dot.className = has ? 'status-dot ok' : 'status-dot';
-    text.textContent = has ? 'Configured' : 'Not connected';
+  // Master Key
+  if (hasMKFile) {
+    rows.push(`<div class="config-status">
+      <span class="icon">✅</span>
+      <div class="label"><strong>Master Key</strong>Loaded from <code>config.js</code></div>
+    </div>`);
+  } else if (hasMKLS) {
+    rows.push(`<div class="config-status" style="border-color:var(--yellow)">
+      <span class="icon">🔑</span>
+      <div class="label"><strong>Master Key</strong>Saved in this browser's storage (not in config.js)</div>
+    </div>`);
+  } else {
+    rows.push(`<div class="config-status" style="border-color:var(--yellow)">
+      <span class="icon">⚠️</span>
+      <div class="label"><strong>Master Key missing</strong>Enter it below to enable saving notes.</div>
+    </div>`);
   }
+
+  document.getElementById('configStatusCard').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:.6rem;width:100%">${rows.join('')}</div>`;
+  document.getElementById('configStatusCard').style.display = 'block';
+  document.getElementById('configStatusCard').style.padding = '0';
+  document.getElementById('configStatusCard').style.background = 'none';
+  document.getElementById('configStatusCard').style.border = 'none';
+
+  // Show master key input only if not in file
+  const mkSection = document.getElementById('masterKeySection');
+  if (!hasMKFile) {
+    mkSection.style.display = 'block';
+    document.getElementById('masterKeyInput').value = localStorage.getItem(K_MASTERKEY) || '';
+  } else {
+    mkSection.style.display = 'none';
+  }
+}
+
+function saveMasterKey() {
+  const val = document.getElementById('masterKeyInput').value.trim();
+  if (!val) { toast('Enter a Master Key first', 'var(--red)'); return; }
+  localStorage.setItem(K_MASTERKEY, val);
+  toast('Master Key saved to browser storage!');
+  renderConfigStatus();
 }
 
 // ── Change passcode ────────────────────────────────
 async function changePasscode() {
   const p1 = document.getElementById('newPass1').value;
   const p2 = document.getElementById('newPass2').value;
-  if (!p1)        { toast('Enter a new passcode', 'var(--red)'); return; }
-  if (p1 !== p2)  { toast('Passcodes do not match', 'var(--red)'); return; }
+  if (!p1)           { toast('Enter a new passcode', 'var(--red)'); return; }
+  if (p1 !== p2)     { toast('Passcodes do not match', 'var(--red)'); return; }
   if (p1.length < 4) { toast('Min 4 characters', 'var(--red)'); return; }
   localStorage.setItem(K_PASS, await sha256(p1));
   document.getElementById('newPass1').value = '';

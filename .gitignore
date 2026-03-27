@@ -1,0 +1,7 @@
+# If your repo is PUBLIC and you put your Master Key in config.js,
+# uncomment the line below to prevent it from being pushed to GitHub.
+# WARNING: if you ignore config.js, the Bin ID won't be on the server
+# and students won't be able to load notes. Only ignore if you enter
+# the Bin ID through the Admin panel manually on each device.
+
+# config.js
