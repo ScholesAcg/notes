@@ -434,7 +434,10 @@ async function fetchNotes() {
   }
 
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${binId}/latest`);
+    const headers = {};
+    const apiKey = getMasterKey();
+    if (apiKey) headers['X-Master-Key'] = apiKey;
+    const res = await fetch(`${JSONBIN_BASE}/${binId}/latest`, { headers });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     renderNotes(Array.isArray(data.record?.notes) ? data.record.notes : []);
