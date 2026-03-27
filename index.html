@@ -383,15 +383,22 @@ const K_MASTERKEY = 'cn_masterKey';   // localStorage fallback for master key on
 const DEFAULT_PASS = 'teacher123';
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
 
+function getCfg() {
+  // window.SITE_CONFIG works when config.js uses `window.SITE_CONFIG = {}`
+  // bare SITE_CONFIG works when config.js uses `const`/`var SITE_CONFIG = {}`
+  if (window.SITE_CONFIG) return window.SITE_CONFIG;
+  try { return (typeof SITE_CONFIG !== 'undefined') ? SITE_CONFIG : null; }
+  catch(e) { return null; }
+}
 function getBinId() {
-  return (window.SITE_CONFIG?.binId || '').trim();
+  return (getCfg()?.binId || '').trim();
 }
 function getMasterKey() {
-  const fromFile = (window.SITE_CONFIG?.masterKey || '').trim();
+  const fromFile = (getCfg()?.masterKey || '').trim();
   return fromFile || (localStorage.getItem(K_MASTERKEY) || '').trim();
 }
 function masterKeyInFile() {
-  return !!(window.SITE_CONFIG?.masterKey || '').trim();
+  return !!(getCfg()?.masterKey || '').trim();
 }
 
 // ── State ──────────────────────────────────────────
